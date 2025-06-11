@@ -1,31 +1,44 @@
 # 🧪 Clinical Trial Database Simulation
 
-This project simulates a clinical trial database using PostgreSQL. It includes a realistic data model, mock data for patients, visits, test results, medications, and adverse events. It's designed to demonstrate my SQL and database development skills for an **Associate Database Developer** position.
+This project simulates a clinical trial database using PostgreSQL. It includes a realistic data model, mock data for patients, visits, test results, medications, adverse events, and operational structures like sites and protocols. It's designed to demonstrate my SQL and database development skills for an **Associate Database Developer** position.
 
 ---
 
 ## 🧠 Description
 
-The database replicates the essential components of an Electronic Data Capture (EDC) system in clinical trials. It simulates the following:
+The database replicates essential components of a clinical trial Electronic Data Capture (EDC) system, simulating:
 
 - Patient demographics and enrollment
-- Clinical visits and test results
-- Medication administration
-- Adverse event tracking
+- Clinical visits and lab test results
+- Medication records and adverse events
+- Protocol management
+- Site and investigator assignment
 
-The data was generated using [Mockaroo](https://mockaroo.com) to reflect realistic clinical scenarios.
+Data was generated using [Mockaroo](https://mockaroo.com) to reflect realistic clinical scenarios.
 
 ---
 
-## 🏗 Schema Overview
+## 🧭 Entity Relationship Diagram (ERD)
 
-| Table            | Description                                |
-|------------------|--------------------------------------------|
-| `patients`       | Basic demographic and enrollment data      |
-| `visits`         | Records of patient visits                  |
-| `test_results`   | Lab test results per visit                 |
-| `medications`    | Medications prescribed/administered        |
-| `adverse_events` | Reported adverse events during the trial   |
+The following diagram illustrates the relationships between all tables in the clinical trial database:
+
+![ERD Diagram](assets/erd-diagram.png)
+
+---
+
+## 🗂 Schema Overview
+
+| Table                | Description                                              |
+|----------------------|----------------------------------------------------------|
+| `patients`           | Demographic and enrollment data for each patient         |
+| `visits`             | Patient visit records with visit type and notes          |
+| `labs`               | Lab test results tied to patients                        |
+| `medications`        | Medications prescribed or administered to patients       |
+| `adverse_events`     | Adverse events reported during the clinical trial        |
+| `sites`              | Clinical trial sites and their locations                 |
+| `investigators`      | Trial investigators and their roles/contact info         |
+| `protocols`          | Protocols under which patients are enrolled              |
+| `site_investigators` | Many-to-many mapping of investigators to trial sites     |
 
 ---
 
@@ -37,7 +50,10 @@ clinical-trial-db-demo/
 
 ├── insert_sample_data.sql # Populates all tables with mock data
 
-├── sample_queries.sql # Example queries (joins, aggregates, filters)
+
+├── assets/
+
+│ └── erd-diagram.png # Entity Relationship Diagram image
 
 ├── README.md # This file
 
@@ -53,6 +69,7 @@ clinical-trial-db-demo/
 - pgAdmin
 - PyCharm
 - Mockaroo (data generation)
+- dbdiagram.io (ERD design)
 - Git / GitHub
 
 ---
@@ -69,7 +86,7 @@ HAVING COUNT(*) > 2;
 
 -- Average Hemoglobin test result per patient
 SELECT patient_id, ROUND(AVG(test_result), 2) AS avg_hemoglobin
-FROM test_results
+FROM labs
 WHERE test_name = 'Hemoglobin'
 GROUP BY patient_id;
 
@@ -77,12 +94,19 @@ GROUP BY patient_id;
 SELECT * FROM medications
 WHERE end_date IS NULL;
 
+-- List investigators at each site
+SELECT s.name AS site_name, i.first_name, i.last_name, i.role
+FROM site_investigators si
+JOIN sites s ON si.site_id = s.site_id
+JOIN investigators i ON si.investigator_id = i.investigator_id;
+
 ```
 
 ## 🚀 Future Improvements
-- Add stored procedures and data validation rules
-- Include views for easier analysis
-- Add unit test examples using Python or pgTAP
+- Add stored procedures for common operations
+- Include views for reporting
+- Add user roles and permissions
+- Include testing using Python test scripts
 
 ## 📫 Contact
 Feel free to connect with me:
