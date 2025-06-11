@@ -50,12 +50,6 @@ CREATE TABLE medications (
     end_date DATE
 );
 
-
-
-
-
-
-
 CREATE TABLE sites (
     site_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -91,12 +85,6 @@ CREATE TABLE site_investigators (
     investigator_id INT NOT NULL REFERENCES investigators(investigator_id) ON DELETE CASCADE,
     PRIMARY KET (site_id, investigator_id)
 );
-
-
-
-
-
-
 
 CREATE TABLE protocol_sites (
     protocol_id INT NOT NULL REFERENCES protocols(protocol_id) ON DELETE CASCADE,

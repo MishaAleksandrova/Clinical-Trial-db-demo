@@ -28,32 +28,38 @@ The following diagram illustrates the relationships between all tables in the cl
 
 ## 🗂 Schema Overview
 
-| Table                | Description                                              |
-|----------------------|----------------------------------------------------------|
-| `patients`           | Demographic and enrollment data for each patient         |
-| `visits`             | Patient visit records with visit type and notes          |
-| `labs`               | Lab test results tied to patients                        |
-| `medications`        | Medications prescribed or administered to patients       |
-| `adverse_events`     | Adverse events reported during the clinical trial        |
-| `sites`              | Clinical trial sites and their locations                 |
-| `investigators`      | Trial investigators and their roles/contact info         |
-| `protocols`          | Protocols under which patients are enrolled              |
-| `site_investigators` | Many-to-many mapping of investigators to trial sites     |
+| Table                    | Description                                                   |
+|--------------------------|---------------------------------------------------------------|
+| `patients`               | Demographic and enrollment data for each patient              |
+| `visits`                 | Patient visit records with visit type and notes               |
+| `labs`                   | Lab test results tied to patients                             |
+| `medications`            | Medications prescribed or administered to patients            |
+| `adverse_events`         | Adverse events reported during the clinical trial             |
+| `sites`                  | Clinical trial sites and their locations                      |
+| `investigators`          | Trial investigators and their roles/contact info              |
+| `protocols`              | Protocols defining the structure and scope of clinical trails |
+| `site_investigators`     | Many-to-many mapping of investigators to trial sites          |
+| `protocol_sites`         | Many-to-many mapping to protocols to sites                    |
+| `protocol_investigators` | Many-to-many mapping of protocols to investigators            |
 
 ---
 
 ## 📂 Project Structure
 
-clinical-trial-db-demo/
-
-├── schema.sql # Creates all tables
-
-├── insert_sample_data.sql # Populates all tables with mock data
-
+simple-clinical-trial-db/
 
 ├── assets/
 
 │ └── erd-diagram.png # Entity Relationship Diagram image
+
+├── data
+
+├── insert_sample_data.sql # Populates all tables with mock data
+
+├── schema
+
+│ └──  schema.sql # Creates all tables
+
 
 ├── README.md # This file
 
@@ -77,28 +83,30 @@ clinical-trial-db-demo/
 ## 🧠 Example SQL Queries
 
 ```sql
+-- List all patients along with their most recent visit date
+SELECT p.patient_id, p.first_name, p.last_name, MAX(v.visit_date) AS last_visit
+FROM patients p
+LEFT JOIN visits v ON p.patient_id = v.patient_id
+GROUP BY p.patient_id, p.first_name, p.last_name;
+    
 -- Patients who experienced more than 2 adverse events
-SELECT p.patient_id, p.first_name, p.last_name, COUNT(*) AS event_count
+SELECT p.patient_id, p.first_name, p.last_name, COUNT(*) AS adverse_event_count
 FROM patients p
 JOIN adverse_events ae ON p.patient_id = ae.patient_id
 GROUP BY p.patient_id
 HAVING COUNT(*) > 2;
 
--- Average Hemoglobin test result per patient
-SELECT patient_id, ROUND(AVG(test_result), 2) AS avg_hemoglobin
+-- Average test result per test_name
+SELECT test_name, ROUND(AVG(test_result), 2) AS average_result
 FROM labs
-WHERE test_name = 'Hemoglobin'
-GROUP BY patient_id;
+GROUP BY test_name;
 
--- Medications currently being taken (no end date)
-SELECT * FROM medications
-WHERE end_date IS NULL;
-
--- List investigators at each site
+-- All investigators working at a specific site (e.g., site_id = 1)
 SELECT s.name AS site_name, i.first_name, i.last_name, i.role
 FROM site_investigators si
 JOIN sites s ON si.site_id = s.site_id
-JOIN investigators i ON si.investigator_id = i.investigator_id;
+JOIN investigators i ON si.investigator_id = i.investigator_id
+WHERE si.site_id = 1;
 
 ```
 
