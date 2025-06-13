@@ -83,7 +83,7 @@ CREATE TABLE protocols (
 CREATE TABLE site_investigators (
     site_id INT NOT NULL REFERENCES sites(site_id) ON DELETE CASCADE,
     investigator_id INT NOT NULL REFERENCES investigators(investigator_id) ON DELETE CASCADE,
-    PRIMARY KET (site_id, investigator_id)
+    PRIMARY KEY (site_id, investigator_id)
 );
 
 CREATE TABLE protocol_sites (

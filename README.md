@@ -1,6 +1,6 @@
 # 🧪 Clinical Trial Database Simulation
 
-This project simulates a clinical trial database using PostgreSQL. It includes a realistic data model, mock data for patients, visits, test results, medications, adverse events, and operational structures like sites and protocols. It's designed to demonstrate my SQL and database development skills for an **Associate Database Developer** position.
+This project simulates a clinical trial database using PostgreSQL. It includes a realistic data model, mock data for patients, visits, test results, medications, adverse events, and operational structures like sites and protocols. It's designed to demonstrate my SQL and database development skills.
 
 ---
 
@@ -14,7 +14,9 @@ The database replicates essential components of a clinical trial Electronic Data
 - Protocol management
 - Site and investigator assignment
 
-Data was generated using [Mockaroo](https://mockaroo.com) to reflect realistic clinical scenarios.
+All logic-heavy operations (e.g., logging results, assigning investigators) are encapsulated using stored procedures written in PL/pgSQL.
+
+Data was generated using Mockaroo(https://mockaroo.com) to reflect realistic clinical scenarios.
 
 ---
 
@@ -44,29 +46,25 @@ The following diagram illustrates the relationships between all tables in the cl
 
 ---
 
-## 📂 Project Structure
+## ⚙️ Stored Procedures
 
-simple-clinical-trial-db/
-
-├── assets/
-
-│ └── erd-diagram.png # Entity Relationship Diagram image
-
-├── data
-
-├── insert_sample_data.sql # Populates all tables with mock data
-
-├── schema
-
-│ └──  schema.sql # Creates all tables
-
-
-├── README.md # This file
-
+| Procedure Name                  | Purpose                                                                 |
+|---------------------------------|-------------------------------------------------------------------------|
+| `add_new_patient(...)`          | Inserts a new patient into the system                                  |
+| `assign_investigator_to_site(...)` | Links an investigator to a clinical site                           |
+| `log_lab_result(...)`           | Records a new lab test result for a patient                            |
+| `record_medication(...)`        | Logs medication given to a patient with dose and duration              |
+| `report_adverse_event(...)`     | Records an adverse event reported for a patient                        |
 
 ---
 
+## ✅ Automated Testing
 
+All stored procedures are tested using SQL scripts and executed via a Python test runner:
+```bash
+
+python run_sql_file.py
+````
 ---
 
 ## 🧪 Technologies Used
@@ -111,10 +109,10 @@ WHERE si.site_id = 1;
 ```
 
 ## 🚀 Future Improvements
-- Add stored procedures for common operations
-- Include views for reporting
-- Add user roles and permissions
-- Include testing using Python test scripts
+- Include views and materialized views for reporting
+- Add user roles and permissions (RBAC model)
+- Export test results to HTML or JSON
+- Dockerize for easy setup and teardown
 
 ## 📫 Contact
 Feel free to connect with me:
