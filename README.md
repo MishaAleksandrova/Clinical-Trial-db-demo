@@ -57,6 +57,14 @@ The following diagram illustrates the relationships between all tables in the cl
 | `report_adverse_event(...)`     | Records an adverse event reported for a patient                        |
 
 ---
+## 👁 Views
+
+| View Name                   | Purpose                                                                 |
+|----------------------------|-------------------------------------------------------------------------|
+| `view_patient_summary`     | Combines visit and adverse event data per patient                       |
+| `view_investigator_assignments` | Lists investigators and the sites they are assigned to             |
+| `view_active_medications`  | Displays currently active medication records per patient                |
+---
 
 ## ✅ Automated Testing
 
@@ -109,7 +117,6 @@ WHERE si.site_id = 1;
 ```
 
 ## 🚀 Future Improvements
-- Include views and materialized views for reporting
 - Add user roles and permissions (RBAC model)
 - Export test results to HTML or JSON
 - Dockerize for easy setup and teardown
